@@ -26,6 +26,7 @@ public class usuarios {
     @Column(nullable = false, unique = true)
     private String email;
 
+    
     private String phone;
     
     @Column(nullable = false)

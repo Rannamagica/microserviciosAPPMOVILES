@@ -20,30 +20,30 @@ public class ServiceUsuarios {
     private RepositoryUsuarios userRepository;
 
     public usuarios register(RegisterRequest req) {
-        // 1. Debug: Ver en consola qué llega
-        System.out.println("SERVICIO INTENTANDO GUARDAR: " + req.toString());
+        System.out.println("--- SERVICIO: INICIANDO PROCESO DE GUARDADO ---");
+        System.out.println("Datos recibidos: " + req.toString());
 
-        // 2. Validación
-        if (req.getEmail() == null || req.getEmail().isEmpty()) {
-            throw new RuntimeException("ERROR: El email llegó vacío al servicio");
-        }
-
+        // 1. Validar duplicados
         if (userRepository.existsByEmail(req.getEmail())) {
+            System.out.println("--- ERROR: EL EMAIL YA EXISTE ---");
             throw new RuntimeException("El email ya está registrado");
         }
 
-        // 3. Crear la entidad (Usando tu clase 'Usuarios')
+        // 2. Mapear datos (Pasar de DTO a Entidad)
         usuarios nuevoUsuario = new usuarios();
-
-        // 4. Mapeo MANUAL (Aquí aseguramos que no se pierda nada)
         nuevoUsuario.setName(req.getName());
-        nuevoUsuario.setEmail(req.getEmail()); // <--- ESTO ES LO CRÍTICO
+        nuevoUsuario.setEmail(req.getEmail());
         nuevoUsuario.setPhone(req.getPhone());
         nuevoUsuario.setPassword(req.getPassword());
         nuevoUsuario.setRol(req.getRol());
 
-        // 5. Guardar
-        return userRepository.save(nuevoUsuario);
+        // 3. GUARDAR (La línea más importante)
+        System.out.println("--- SERVICIO: INTENTANDO GUARDAR EN MYSQL... ---");
+        usuarios usuarioGuardado = userRepository.save(nuevoUsuario);
+        
+        System.out.println("--- SERVICIO: ¡GUARDADO CON ID " + usuarioGuardado.getId() + "! ---");
+        
+        return usuarioGuardado;
     }
 
     public Optional<usuarios> login(String email, String password) {
