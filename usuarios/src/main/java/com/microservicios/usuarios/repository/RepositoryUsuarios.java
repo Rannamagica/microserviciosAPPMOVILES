@@ -9,4 +9,5 @@ import com.microservicios.usuarios.model.usuarios;
 public interface RepositoryUsuarios extends JpaRepository<usuarios, Long> {
 
     Optional<usuarios> findByEmail(String email);
+    Boolean existsByEmail(String email);
 }

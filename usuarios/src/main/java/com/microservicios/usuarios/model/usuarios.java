@@ -17,8 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class usuarios {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -27,12 +26,11 @@ public class usuarios {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20) // Longitud opcional, pero recomendada para teléfonos
     private String phone;
-
+    
     @Column(nullable = false)
-    private String password;
+    private String password; // Recuerda: En producción esto debe ser HASH
 
-    @Column(nullable = false)
+    @Column(nullable = false) // "Reclutador" o "Colaborador"
     private String rol;
 }
