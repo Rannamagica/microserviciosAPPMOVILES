@@ -1,21 +1,27 @@
 package com.microservicios.usuarios.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterRequest {
+
+    // @JsonProperty OBLIGA a Java a conectar con el JSON
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("email")
     private String email;
+
+    @JsonProperty("phone")
     private String phone;
+
+    @JsonProperty("password")
     private String password;
+
+    @JsonProperty("rol")
     private String rol;
 
-    // Constructor vacío (Obligatorio para JSON)
     public RegisterRequest() {}
 
-    // Constructor con todo
     public RegisterRequest(String name, String email, String phone, String password, String rol) {
         this.name = name;
         this.email = email;
@@ -24,7 +30,6 @@ public class RegisterRequest {
         this.rol = rol;
     }
 
-    // GETTERS Y SETTERS MANUALES
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -39,9 +44,9 @@ public class RegisterRequest {
 
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
-    
+
     @Override
     public String toString() {
-        return "RegisterRequest{email='" + email + "', name='" + name + "'}";
+        return "RegisterRequest [name=" + name + ", email=" + email + "]";
     }
 }
