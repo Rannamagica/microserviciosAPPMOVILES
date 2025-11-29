@@ -1,5 +1,6 @@
 package com.microservicios.Ofertas.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,21 +16,37 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Modelo que representa una oferta de trabajo publicada por un reclutador.")
 public class ofertas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID único de la oferta", example = "10")
     private Long id;
 
-    // Datos básicos de la oferta
+    @Schema(description = "Título de la oferta de trabajo", example = "Desarrollador Full Stack")
     private String titulo;
-    private String descripcion;
-    private Double salario;
-    private String experiencia; // Ej: "Senior", "Junior"
-    private String carrera;     // Ej: "Informática"
-    private String telefono;    // Teléfono de contacto
 
-    // Relación lógica: ID del usuario que creó la oferta
+    @Schema(description = "Descripción detallada de la oferta", 
+            example = "Buscamos un desarrollador con experiencia en Java y React.")
+    private String descripcion;
+
+    @Schema(description = "Salario ofrecido para el puesto", example = "1500000")
+    private Double salario;
+
+    @Schema(description = "Nivel de experiencia requerido", 
+            example = "Junior / Semi Senior / Senior")
+    private String experiencia;
+
+    @Schema(description = "Carrera o área profesional requerida", 
+            example = "Ingeniería en Informática")
+    private String carrera;
+
+    @Schema(description = "Teléfono de contacto del reclutador", 
+            example = "+56912345678")
+    private String telefono;
+
     @Column(name = "id_reclutador")
+    @Schema(description = "ID del usuario que creó la oferta", example = "3")
     private Long idReclutador;
 }

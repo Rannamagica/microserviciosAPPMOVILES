@@ -2,21 +2,28 @@ package com.microservicios.usuarios.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "DTO para registrar un nuevo usuario en el sistema")
 public class RegisterRequest {
 
-    // @JsonProperty OBLIGA a Java a conectar con el JSON
+    @Schema(description = "Nombre completo del usuario", example = "Felipe Arriagada")
     @JsonProperty("name")
     private String name;
 
+    @Schema(description = "Correo electrónico del usuario", example = "felipe@gmail.com")
     @JsonProperty("email")
     private String email;
 
+    @Schema(description = "Número telefónico del usuario", example = "+56 9 7777 1234")
     @JsonProperty("phone")
     private String phone;
 
+    @Schema(description = "Contraseña del usuario", example = "123456")
     @JsonProperty("password")
     private String password;
 
+    @Schema(description = "Rol del usuario dentro del sistema", example = "cliente")
     @JsonProperty("rol")
     private String rol;
 

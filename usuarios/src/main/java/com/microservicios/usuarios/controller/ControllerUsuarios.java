@@ -15,6 +15,12 @@ import com.microservicios.usuarios.DTO.RegisterRequest;
 import com.microservicios.usuarios.model.usuarios;
 import com.microservicios.usuarios.service.ServiceUsuarios;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,6 +29,26 @@ public class ControllerUsuarios {
     @Autowired
     private ServiceUsuarios userService;
 
+
+    @Operation(
+    summary = "Registrar un nuevo usuario",
+    description = "Crea un usuario nuevo y retorna un token falso de registro."
+)
+@ApiResponses(value = {
+    @ApiResponse(
+        responseCode = "200",
+        description = "Usuario registrado correctamente",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = AuthResponse.class)
+        )
+    ),
+    @ApiResponse(
+        responseCode = "400",
+        description = "Error en los datos del registro",
+        content = @Content(mediaType = "text/plain")
+    )
+})
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
         try {
@@ -46,6 +72,25 @@ public class ControllerUsuarios {
         }
     }
 
+    @Operation(
+        summary = "Iniciar sesión",
+        description = "Valida las credenciales y retorna los datos del usuario con un token falso de login."
+    )
+        @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Login exitoso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AuthResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "Credenciales incorrectas",
+            content = @Content(mediaType = "text/plain")
+        )
+    })
    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         // 1. Buscamos al usuario
