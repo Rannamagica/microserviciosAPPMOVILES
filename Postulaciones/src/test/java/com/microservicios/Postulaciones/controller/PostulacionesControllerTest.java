@@ -13,16 +13,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservicios.Postulaciones.DTO.JobPostDTO;
+import com.microservicios.Postulaciones.config.TestSecurityConfig;
 import com.microservicios.Postulaciones.controller.PostulacionesController.RequestDTO;
 import com.microservicios.Postulaciones.model.postulaciones;
 import com.microservicios.Postulaciones.service.PostulacionesSevice;
 
 @WebMvcTest(PostulacionesController.class)
+@Import(TestSecurityConfig.class)
 class PostulacionesControllerTest {
 
     @Autowired
@@ -60,11 +63,11 @@ class PostulacionesControllerTest {
 
     @Test
     void testApply_Success() throws Exception {
-        // Given
+        // Datos entregados
         RequestDTO requestDTO = new RequestDTO(100L, 200L);
         when(appService.postular(anyLong(), anyLong())).thenReturn(postulacion);
 
-        // When & Then
+        // Cuando y luego
         mockMvc.perform(post("/api/applications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
@@ -78,12 +81,12 @@ class PostulacionesControllerTest {
 
     @Test
     void testApply_YaPostulado() throws Exception {
-        // Given
+       
         RequestDTO requestDTO = new RequestDTO(100L, 200L);
         when(appService.postular(anyLong(), anyLong()))
                 .thenThrow(new RuntimeException("Ya postulado"));
 
-        // When & Then
+       
         mockMvc.perform(post("/api/applications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
@@ -95,12 +98,12 @@ class PostulacionesControllerTest {
 
     @Test
     void testGetMyApplications_Success() throws Exception {
-        // Given
+        
         Long userId = 100L;
         List<JobPostDTO> listaOfertas = Arrays.asList(jobPostDTO1, jobPostDTO2);
         when(appService.obtenerMisPostulaciones(userId)).thenReturn(listaOfertas);
 
-        // When & Then
+        
         mockMvc.perform(get("/api/applications/user/{userId}", userId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -115,11 +118,11 @@ class PostulacionesControllerTest {
 
     @Test
     void testGetMyApplications_EmptyList() throws Exception {
-        // Given
+        
         Long userId = 100L;
         when(appService.obtenerMisPostulaciones(userId)).thenReturn(Arrays.asList());
 
-        // When & Then
+        
         mockMvc.perform(get("/api/applications/user/{userId}", userId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
