@@ -12,16 +12,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservicios.usuarios.DTO.LoginRequest;
 import com.microservicios.usuarios.DTO.RegisterRequest;
+import com.microservicios.usuarios.config.TestSecurityConfig;
 import com.microservicios.usuarios.model.usuarios;
 import com.microservicios.usuarios.service.ServiceUsuarios;
 
 @WebMvcTest(ControllerUsuarios.class)
+@Import(TestSecurityConfig.class)
 class ControllerUsuariosTest {
 
     @Autowired
@@ -56,10 +59,10 @@ class ControllerUsuariosTest {
 
     @Test
     void testRegister_Success() throws Exception {
-        // Given
+        // Entregados
         when(userService.register(any(RegisterRequest.class))).thenReturn(usuario);
 
-        // When & Then
+        // cuando y luego 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
@@ -74,11 +77,11 @@ class ControllerUsuariosTest {
 
     @Test
     void testRegister_EmailAlreadyExists() throws Exception {
-        // Given
+        
         when(userService.register(any(RegisterRequest.class)))
                 .thenThrow(new RuntimeException("El email ya está registrado"));
 
-        // When & Then
+        
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
@@ -90,11 +93,11 @@ class ControllerUsuariosTest {
 
     @Test
     void testLogin_Success() throws Exception {
-        // Given
+        
         LoginRequest loginRequest = new LoginRequest("juan@test.com", "Admin123!");
         when(userService.login(anyString(), anyString())).thenReturn(Optional.of(usuario));
 
-        // When & Then
+        
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
@@ -102,23 +105,23 @@ class ControllerUsuariosTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Juan Pérez"))
                 .andExpect(jsonPath("$.email").value("juan@test.com"))
-                .andExpect(jsonPath("$.token").value("TOKEN_FALSO_LOGIN_ABC"));
+                .andExpect(jsonPath("$.token").value("TOKEN_FALSO_LOGIN_999"));
 
         verify(userService, times(1)).login(anyString(), anyString());
     }
 
     @Test
     void testLogin_InvalidCredentials() throws Exception {
-        // Given
+        
         LoginRequest loginRequest = new LoginRequest("juan@test.com", "WrongPassword");
         when(userService.login(anyString(), anyString())).thenReturn(Optional.empty());
 
-        // When & Then
+        
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isUnauthorized())
-                .andExpect(content().string("Credenciales inválidas"));
+                .andExpect(content().string("Credenciales incorrectas"));
 
         verify(userService, times(1)).login(anyString(), anyString());
     }
